@@ -4,7 +4,7 @@ from typing import Optional
 
 @dataclass
 class Book:
-    name: str
+    title: str
     author: str
     publisher: str
     publication_year: Optional[int]
@@ -27,9 +27,13 @@ class Book:
         return True
 
     def fields(self):
-        return [self.name, self.author, self.publisher, self.publication_year, self.ISBN, self.stock]
+        return [self.title, self.author, self.publisher, self.publication_year, self.ISBN, self.stock]
+
+    @staticmethod
+    def required_fields():
+        return ['title', 'author', 'publisher', 'ISBN']
 
     @classmethod
-    def create_instance(cls, *args):
-        instance = cls(*args)
+    def create_instance(cls, title, author, publisher, isbn, **kwargs):
+        instance = cls(title=title, author=author, publisher=publisher, isbn=isbn, **kwargs)
         return instance

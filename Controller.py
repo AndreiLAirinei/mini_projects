@@ -6,17 +6,13 @@ class Controller:
     def __init__(self, repository):
         self.repository = repository
 
-    def create(self, *args):
-        # if not all(field in book_data for field in Book.fields()):
-        #     # missing_fields = [field for field in Book.required_fields() if field not in data]
-        #     # raise FieldNotFound(*missing_fields)
-
-        # Another solution? IDK which on is good
+    def create(self, title, author, publisher, publication_year, isbn, stock=0):
+        # Another solution? (for dictionaries) IDK if this is good
         # for field, value in zip(Book.fields(), args):
         #     book_data[field] = value
 
-        book = Book().create_instance(*args)
-
+        book = Book.create_instance(title=title, author=author, publisher=publisher, publication_year=publication_year,
+                                    ISBN=isbn, stock=stock)
         return self.repository.create(book)
 
     def read_all(self):
@@ -24,10 +20,6 @@ class Controller:
 
     def read_by_id(self, isbn):
         try:
-            # to do with ISBN method in validation
-            # if not self.repository.valid_id(isbn):
-            #     raise Exception
-
             if not self.repository.isbn_exists(isbn):
                 raise ISBNNotFound(isbn)
             else:
@@ -35,17 +27,22 @@ class Controller:
         except ISBNNotFound as error:
             print(str(error))
 
-    def update(self, isbn, *args):
+    def update(self, title, author, publisher, publication_year, isbn, stock=0):
+        try:
+            if not self.repository.isbn_exists(isbn):
+                raise ISBNNotFound(isbn)
 
-        if not self.repository.isbn_exists(isbn):
-            raise ISBNNotFound(isbn)
-        else:
-            updated_book = Book.create_instance(*args)
+            updated_book = Book.create_instance(title=title, author=author, publisher=publisher,
+                                publication_year=publication_year, ISBN=isbn, stock=stock)
             self.repository.update(isbn, updated_book)
+        except ISBNNotFound as error:
+            print(str(error))
 
     def delete(self, isbn):
-        if not self.repository.isbn_exists(isbn):
-            raise Exception
-        else:
-            return self.repository.delete(isbn)
-
+        try:
+            if not self.repository.isbn_exists(isbn):
+                raise ISBNNotFound(isbn)
+            else:
+                return self.repository.delete(isbn)
+        except ISBNNotFound as error:
+            print(str(error))
