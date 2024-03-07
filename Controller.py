@@ -1,20 +1,20 @@
-from Repository import InMemoryRepository
 from book_model import Book
 
 
 class Controller:
-    def __init__(self):
-        self.repository = InMemoryRepository()
+    def __init__(self, repository):
+        self.repository = repository
 
     def create(self, book_data):
-
         if not all(field in book_data for field in Book.required_fields()):
-            raise Exception
+            # missing_fields = [field for field in Book.required_fields() if field not in data]
+            # raise FieldNotFound(*missing_fields)
 
-        # create a book objects with the data
-        book = Book(**book_data)
+            # redo
+            # create a book objects with the data
+            book = Book(**book_data)
 
-        return self.repository.create(book)
+            return self.repository.create(book)
 
     def read_all(self):
         return self.repository.read_all()
@@ -48,4 +48,3 @@ class Controller:
         else:
             return self.repository.delete(isbn)
 
-    # adding random code for pull request

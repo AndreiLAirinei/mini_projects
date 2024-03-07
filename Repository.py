@@ -1,5 +1,3 @@
-from book_model import Book
-
 
 class InMemoryRepository:
     def __init__(self):
@@ -10,7 +8,7 @@ class InMemoryRepository:
         return True
 
     def read_all(self):
-        return self.data.copy()
+        return self.data
 
     def read_by_isbn(self, isbn):
         for book in self.data:

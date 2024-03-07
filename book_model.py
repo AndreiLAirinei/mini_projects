@@ -5,11 +5,11 @@ from typing import Optional
 @dataclass
 class Book:
     name: str
-    author: Optional[str]
-    publisher: Optional[str]
+    author: str
+    publisher: str
     publication_year: Optional[int]
     ISBN: str
-    stock: Optional[int]
+    stock: Optional[int] == 0
 
     @property
     def publication_year_valid(self):
@@ -27,5 +27,5 @@ class Book:
         return True
 
     def required_fields(self):
-        field_list = [self.name, self.ISBN]
+        field_list = [self.name, self.author, self.publisher, self.ISBN]
         return field_list
