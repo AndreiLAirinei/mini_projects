@@ -1,4 +1,5 @@
 from book_model import Book
+from validations import validate_book
 from exceptions import ISBNNotFound
 
 
@@ -7,13 +8,19 @@ class Controller:
         self.repository = repository
 
     def create(self, title, author, publisher, publication_year, isbn, stock=0):
-        # Another solution? (for dictionaries) IDK if this is good
-        # for field, value in zip(Book.fields(), args):
-        #     book_data[field] = value
+        try:
+            # Another solution? (for dictionaries) IDK if this is good
+            # for field, value in zip(Book.fields(), args):
+            #     book_data[field] = value
 
-        book = Book.create_instance(title=title, author=author, publisher=publisher, publication_year=publication_year,
-                                    ISBN=isbn, stock=stock)
-        return self.repository.create(book)
+            book_instance = Book.create_instance(title=title, author=author, publisher=publisher, publication_year=publication_year,
+                                        ISBN=isbn, stock=stock)
+            if validate_book(book_instance):
+                return self.repository.create(book_instance)
+            else:
+                raise Exception
+        except Exception as error:
+            pass
 
     def read_all(self):
         return self.repository.read_all()
@@ -34,7 +41,11 @@ class Controller:
 
             updated_book = Book.create_instance(title=title, author=author, publisher=publisher,
                                 publication_year=publication_year, ISBN=isbn, stock=stock)
-            self.repository.update(isbn, updated_book)
+            if validate_book(updated_book):
+                self.repository.update(isbn, updated_book)
+            else:
+                raise Exception
+
         except ISBNNotFound as error:
             print(str(error))
 
