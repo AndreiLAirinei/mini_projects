@@ -1,6 +1,6 @@
 from book_model import Book
 from validations import validate_book
-from exceptions import ISBNNotFound
+from exceptions import ISBNNotFound, BookFormatInvalid
 
 
 class Controller:
@@ -18,9 +18,9 @@ class Controller:
             if validate_book(book_instance):
                 return self.repository.create(book_instance)
             else:
-                raise Exception
-        except Exception as error:
-            pass
+                raise BookFormatInvalid(isbn)
+        except BookFormatInvalid as error:
+            print(str(error))
 
     def read_all(self):
         return self.repository.read_all()
@@ -41,12 +41,13 @@ class Controller:
 
             updated_book = Book.create_instance(title=title, author=author, publisher=publisher,
                                 publication_year=publication_year, ISBN=isbn, stock=stock)
+
             if validate_book(updated_book):
                 self.repository.update(isbn, updated_book)
             else:
-                raise Exception
+                raise BookFormatInvalid(isbn)
 
-        except ISBNNotFound as error:
+        except (ISBNNotFound, BookFormatInvalid) as error:
             print(str(error))
 
     def delete(self, isbn):
@@ -55,5 +56,6 @@ class Controller:
                 raise ISBNNotFound(isbn)
             else:
                 return self.repository.delete(isbn)
+
         except ISBNNotFound as error:
             print(str(error))

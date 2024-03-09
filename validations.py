@@ -1,3 +1,4 @@
+from exceptions import ISBNInvalid, RequiredFieldsNotFound, PublicationYearInvalid, StockInvalid
 
 
 def validate_publication_year(year):
@@ -44,24 +45,27 @@ def validate_isbn(isbn):
 
 def validate_book(book_instance):
     # Validation for individual fields
+    try:
+        if (book_instance.title is not None) and not isinstance(book_instance.title, str):
+            raise RequiredFieldsNotFound(book_instance.title)
 
-    if (book_instance.title is not None) and not isinstance(book_instance.title, str):
-        return False
+        if (book_instance.author is not None) and not isinstance(book_instance.author, str):
+            raise RequiredFieldsNotFound(book_instance.author)
 
-    if (book_instance.author is not None) and not isinstance(book_instance.author, str):
-        return False
+        if (book_instance.publisher is not None) and not isinstance(book_instance.publisher, str):
+            raise RequiredFieldsNotFound(book_instance.publisher)
 
-    if (book_instance.publisher is not None) and not isinstance(book_instance.publisher, str):
-        return False
+        if book_instance.publication_year is not None and (not isinstance(book_instance.publication_year, int)
+                    or book_instance.publication_year < 0) and not validate_publication_year(book_instance.ISBN):
+            raise PublicationYearInvalid(book_instance.publication_year)
 
-    if book_instance.publication_year is not None and (not isinstance(book_instance.publication_year, int)
-                or book_instance.publication_year < 0) and not validate_publication_year(book_instance.ISBN):
-        return False
+        if (book_instance.ISBN is not None) and not validate_isbn(book_instance.ISBN):
+            raise ISBNInvalid(book_instance.ISBN)
 
-    if (book_instance.ISBN is not None) and not validate_isbn(book_instance.ISBN):
-        return False
+        if not isinstance(book_instance.stock, int) or book_instance.stock < 0:
+            raise StockInvalid(book_instance.stock)
 
-    if not isinstance(book_instance.stock, int) or book_instance.stock < 0:
-        return False
+    except (RequiredFieldsNotFound, PublicationYearInvalid, ISBNInvalid, StockInvalid) as error:
+        print(str(error))
 
     return True
