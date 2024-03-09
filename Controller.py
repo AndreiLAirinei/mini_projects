@@ -7,14 +7,15 @@ class Controller:
     def __init__(self, repository):
         self.repository = repository
 
-    def create(self, title, author, publisher, publication_year, isbn, stock=0):
+    def create(self, title, author, publisher, isbn, publication_year, stock=0):
         try:
             # Another solution? (for dictionaries) IDK if this is good
             # for field, value in zip(Book.fields(), args):
             #     book_data[field] = value
 
-            book_instance = Book.create_instance(title=title, author=author, publisher=publisher, publication_year=publication_year,
-                                        ISBN=isbn, stock=stock)
+            book_instance = Book.create_instance(title=title, author=author, publisher=publisher, isbn=isbn,
+                                                 publication_year=publication_year, stock=stock)
+
             if validate_book(book_instance):
                 return self.repository.create(book_instance)
             else:
@@ -34,13 +35,13 @@ class Controller:
         except ISBNNotFound as error:
             print(str(error))
 
-    def update(self, title, author, publisher, publication_year, isbn, stock=0):
+    def update(self, title, author, publisher, isbn, publication_year, stock=0):
         try:
             if not self.repository.isbn_exists(isbn):
                 raise ISBNNotFound(isbn)
 
             updated_book = Book.create_instance(title=title, author=author, publisher=publisher,
-                                publication_year=publication_year, ISBN=isbn, stock=stock)
+                                                ISBN=isbn, publication_year=publication_year, stock=stock)
 
             if validate_book(updated_book):
                 self.repository.update(isbn, updated_book)

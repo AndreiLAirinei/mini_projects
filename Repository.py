@@ -38,6 +38,6 @@ class InMemoryRepository:
 
     def isbn_exists(self, isbn):
         for book in self.data:
-            if book.ISBN == isbn:
+            if book.isbn == isbn:
                 return True
         return False

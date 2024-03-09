@@ -55,12 +55,13 @@ def validate_book(book_instance):
         if (book_instance.publisher is not None) and not isinstance(book_instance.publisher, str):
             raise RequiredFieldsNotFound(book_instance.publisher)
 
-        if book_instance.publication_year is not None and (not isinstance(book_instance.publication_year, int)
-                    or book_instance.publication_year < 0) and not validate_publication_year(book_instance.ISBN):
+        if (book_instance.publication_year is not None and (not isinstance(book_instance.publication_year, int)
+                    or book_instance.publication_year < 0) and
+                not validate_publication_year(book_instance.publication_year)):
             raise PublicationYearInvalid(book_instance.publication_year)
 
-        if (book_instance.ISBN is not None) and not validate_isbn(book_instance.ISBN):
-            raise ISBNInvalid(book_instance.ISBN)
+        if (book_instance.isbn is not None) and not validate_isbn(book_instance.isbn):
+            raise ISBNInvalid(book_instance.isbn)
 
         if not isinstance(book_instance.stock, int) or book_instance.stock < 0:
             raise StockInvalid(book_instance.stock)
