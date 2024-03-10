@@ -9,29 +9,38 @@ class UI:
             self.print_menu()
             user_input = int(input("Please input the option: "))
 
-            try:
-                if user_input == 1:
-                    print("Book details:")
-                    self.create()
-                elif user_input == 2:
-                    print("All book entries:\n")
-                    self.controller.read_all()
-                elif user_input == 3:
-                    isbn = input("Enter the ISBN: \n")
-                    self.controller.read_by_id(isbn)
-                elif user_input == 4:
-                    self.update()
-                elif user_input == 5:
-                    isbn = input("Enter the ISBN: \n")
-                    deleted_book = self.controller.delete(isbn)
-                    print("Deleted Book:", deleted_book)
-                elif user_input == 6:
-                    break
+            if user_input == 1:
+                print("Book details:")
+                if self.create():
+                    print("Book created successfully.")
                 else:
-                    print("Invalid choice. Please try again.")
+                    print("There's an error. Try again.")
 
-            except ValueError:
-                print("Invalid input. Please enter a valid option.")
+            elif user_input == 2:
+                print("All book entries:\n")
+                var = self.controller.read_all()
+                for value in var:
+                    print(value)
+
+            elif user_input == 3:
+                isbn = input("Enter the ISBN: \n")
+                var = self.controller.read_by_id(isbn)
+                for value in var:
+                    print(var)
+
+            elif user_input == 4:
+                self.update()
+
+            elif user_input == 5:
+                isbn = input("Enter the ISBN: \n")
+                deleted_book = self.controller.delete(isbn)
+                print("Deleted Book:", deleted_book)
+
+            elif user_input == 6:
+                break
+
+            else:
+                print("Invalid choice. Please try again.")
 
     @staticmethod
     def print_menu():
@@ -52,7 +61,6 @@ class UI:
         stock = int(input("Enter the stock: "))
 
         self.controller.create(title, author, publisher, isbn, publication_year, stock)
-        print("Book created successfully.")
 
     def update(self):
         title = input("Enter the updated title: ")

@@ -67,6 +67,6 @@ def validate_book(book_instance):
             raise StockInvalid(book_instance.stock)
 
     except (RequiredFieldsNotFound, PublicationYearInvalid, ISBNInvalid, StockInvalid) as error:
-        print(str(error))
+        return False
 
     return True

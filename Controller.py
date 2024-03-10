@@ -9,9 +9,6 @@ class Controller:
 
     def create(self, title, author, publisher, isbn, publication_year, stock=0):
         try:
-            # Another solution? (for dictionaries) IDK if this is good
-            # for field, value in zip(Book.fields(), args):
-            #     book_data[field] = value
 
             book_instance = Book.create_instance(title=title, author=author, publisher=publisher, isbn=isbn,
                                                  publication_year=publication_year, stock=stock)
@@ -20,6 +17,7 @@ class Controller:
                 return self.repository.create(book_instance)
             else:
                 raise BookFormatInvalid(isbn)
+
         except BookFormatInvalid as error:
             print(str(error))
 
