@@ -3,17 +3,12 @@ from exceptions import ISBNInvalid, RequiredFieldsNotFound, PublicationYearInval
 
 def validate_publication_year(year):
     current_year = 2024
-    if 1500 <= year <= current_year:
-        return True
-    else:
-        return False
+    return 1500 <= year <= current_year
 
 
 def validate_isbn(isbn):
-    # Remove hyphens from the ISBN
     isbn = isbn.replace("-", "")
 
-    # Checking the length of the string
     if len(isbn) not in (10, 13):
         return False
 
@@ -23,11 +18,7 @@ def validate_isbn(isbn):
         for i, char in enumerate(isbn):
             if char.isdigit():
                 total_sum += int(char) * (10 - i)
-
-        if total_sum % 10 == 0:
-            return True
-        else:
-            return False
+        return total_sum % 10 == 0
 
     elif len(isbn) == 13:
         # ISBN-13 algorithm
@@ -36,37 +27,56 @@ def validate_isbn(isbn):
                 total_sum += int(char)
             else:
                 total_sum += int(char) * 3
-
-        if total_sum % 11 == 0:
-            return True
-        else:
-            return False
+        return total_sum % 11 == 0
 
 
 def validate_book(book_instance):
-    # Validation for individual fields
     try:
-        if (book_instance.title is not None) and not isinstance(book_instance.title, str):
-            raise RequiredFieldsNotFound(book_instance.title)
+        validate_not_none(book_instance)
+        validate_instance_str(book_instance.title)
+        validate_instance_str(book_instance.author)
+        validate_instance_str(book_instance.publisher)
 
-        if (book_instance.author is not None) and not isinstance(book_instance.author, str):
-            raise RequiredFieldsNotFound(book_instance.author)
+        if book_instance.publication_year is not None:
+            if (not validate_instance_int(book_instance.publication_year) and
+                    validate_publication_year(book_instance.publication_year)):
+                raise PublicationYearInvalid(book_instance.publication_year)
 
-        if (book_instance.publisher is not None) and not isinstance(book_instance.publisher, str):
-            raise RequiredFieldsNotFound(book_instance.publisher)
+        if book_instance.stock is not None:
+            if not validate_instance_int(book_instance.stock):
+                raise StockInvalid(book_instance.stock)
 
-        if (book_instance.publication_year is not None and (not isinstance(book_instance.publication_year, int)
-                    or book_instance.publication_year < 0) and
-                not validate_publication_year(book_instance.publication_year)):
-            raise PublicationYearInvalid(book_instance.publication_year)
-
-        if (book_instance.isbn is not None) and not validate_isbn(book_instance.isbn):
+        if not validate_isbn(book_instance.isbn):
             raise ISBNInvalid(book_instance.isbn)
-
-        if not isinstance(book_instance.stock, int) or book_instance.stock < 0:
-            raise StockInvalid(book_instance.stock)
 
     except (RequiredFieldsNotFound, PublicationYearInvalid, ISBNInvalid, StockInvalid) as error:
         return False
 
+    return True
+
+
+def validate_not_none(book_instance):
+    fields = ['title', 'author', 'publisher', 'isbn']
+    for field in fields:
+        attribute_value = getattr(book_instance, field)
+        if attribute_value is None:
+            raise RequiredFieldsNotFound(attribute_value)
+    return True
+
+
+def validate_instance_str(book_instance):
+    fields_str = ['title', 'author', 'publisher']
+    for field in fields_str:
+        attribute_value = getattr(book_instance, field)
+        if not isinstance(attribute_value, str):
+            raise RequiredFieldsNotFound(attribute_value)
+    return True
+
+
+def validate_instance_int(book_instance):
+    fields_int = ['publication_year', 'stock']
+    for field in fields_int:
+        attribute_value = getattr(book_instance, field)
+        if not isinstance(attribute_value, int) and attribute_value < 0:
+            raise RequiredFieldsNotFound(attribute_value)
     return True
