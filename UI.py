@@ -10,31 +10,19 @@ class UI:
             user_input = int(input("Please input the option: "))
 
             if user_input == 1:
-                print("Book details:")
-                if self.create():
-                    print("Book created successfully.")
-                else:
-                    print("There's an error. Try again.")
+                self.create_entry()
 
             elif user_input == 2:
-                print("All book entries:\n")
-                var = self.controller.read_all()
-                for value in var:
-                    print(value)
+                self.read_all_entries()
 
             elif user_input == 3:
-                isbn = input("Enter the ISBN: \n")
-                var = self.controller.read_by_id(isbn)
-                for value in var:
-                    print(var)
+                self.read_entry_by_id()
 
             elif user_input == 4:
-                self.update()
+                self.update_entry_by_id()
 
             elif user_input == 5:
-                isbn = input("Enter the ISBN: \n")
-                deleted_book = self.controller.delete(isbn)
-                print("Deleted Book:", deleted_book)
+                self.delete_entry_by_id()
 
             elif user_input == 6:
                 break
@@ -47,12 +35,12 @@ class UI:
         print("\n")
         print("1. Create entry")
         print("2. Read all entries")
-        print("3. Read entry by ISBN")
-        print("4. Update entry by ISBN")
-        print("5. Delete entry by ISBN")
+        print("3. Read entry by ID")
+        print("4. Update entry by ID")
+        print("5. Delete entry by ID")
         print("6. Exit")
 
-    def create(self):
+    def create_entry(self):
         title = input("Enter the title: ")
         author = input("Enter the author: ")
         publisher = input("Enter the publisher: ")
@@ -60,9 +48,30 @@ class UI:
         publication_year = int(input("Enter the publication year: "))
         stock = int(input("Enter the stock: "))
 
-        self.controller.create(title, author, publisher, isbn, publication_year, stock)
+        if self.controller.create(title, author, publisher, publication_year, isbn, stock):
+            print("Book created successfully.")
+        else:
+            print("Error creating the book. Please try again.")
 
-    def update(self):
+    def read_all_entries(self):
+        entries = self.controller.read_all()
+        if entries:
+            print("All book entries:\n")
+            for entry in entries:
+                print(entry)
+        else:
+            print("No book entries found.")
+
+    def read_entry_by_id(self):
+        book_id = int(input("Enter the ID: "))
+        book = self.controller.read_by_id(book_id)
+        if book:
+            print(book)
+        else:
+            print(f"Book with ID {book_id} not found.")
+
+    def update_entry_by_id(self):
+        book_id = int(input("Enter the ID of the book to update: "))
         title = input("Enter the updated title: ")
         author = input("Enter the updated author: ")
         publisher = input("Enter the updated publisher: ")
@@ -70,5 +79,17 @@ class UI:
         publication_year = int(input("Enter the updated publication year: "))
         stock = int(input("Enter the updated stock: "))
 
-        self.controller.update(title, author, publisher, isbn, publication_year, stock)
-        print("Book updated successfully.")
+        if self.controller.update(book_id, title, author, publisher, publication_year, isbn, stock):
+            print("Book updated successfully.")
+            return True
+        else:
+            print("Error updating the book. Please try again.")
+            return False
+
+    def delete_entry_by_id(self):
+        book_id = int(input("Enter the ID of the book to delete: "))
+        deleted = self.controller.delete(book_id)
+        if deleted:
+            print(f"Book with ID {book_id} deleted successfully.")
+        else:
+            print(f"Book with ID {book_id} not found or could not be deleted.")

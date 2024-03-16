@@ -5,9 +5,9 @@ class InMemoryRepository:
         self.last_book_id = 0
 
     def create(self, instance):
-        instance.book_id = self.generate_id()
+        self.last_book_id += 1
+        instance.book_id = self.last_book_id
         self.data.append(instance)
-        return True
 
     def read_all(self):
         return self.data
@@ -18,12 +18,12 @@ class InMemoryRepository:
                 return book
         return None
 
-    def update(self, book):
+    def update(self, book_id, book):
         if not self.data:
             return False
 
         for i, existing_book in enumerate(self.data):
-            if existing_book.book_id == book.book_id:
+            if existing_book.book_id == book_id:
                 self.data[i] = book
                 return True
         return False
@@ -44,6 +44,3 @@ class InMemoryRepository:
                 return True
         return False
 
-    def generate_id(self):
-        self.last_book_id += 1
-        return self.last_book_id

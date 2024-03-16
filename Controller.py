@@ -7,14 +7,14 @@ class Controller:
     def __init__(self, repository):
         self.repository = repository
 
-    def create(self, title, author, publisher, isbn, publication_year, stock=0):
+    def create(self, title, author, publisher, publication_year, isbn, stock=0):
         try:
-            book_instance = Book.create_instance(title=title, author=author, publisher=publisher, isbn=isbn,
-                                                 publication_year=publication_year, stock=stock)
+            book_instance = Book(title, author, publisher, publication_year, isbn, stock)
             if validate_book(book_instance):
-                return self.repository.create(book_instance)
+                self.repository.create(book_instance)
             else:
                 raise BookFormatInvalid(isbn)
+            return True
 
         except BookFormatInvalid as error:
             print(str(error))
@@ -31,17 +31,15 @@ class Controller:
         except IDNotFound as error:
             print(str(error))
 
-    def update(self, book_id, title, author, publisher, isbn, publication_year, stock=0):
+    def update(self, book_id, title, author, publisher, publication_year, isbn, stock=0):
         try:
             if not self.repository.id_exists(book_id):
                 raise IDNotFound(book_id)
 
-            updated_book = Book.create_instance(title=title, author=author, publisher=publisher,
-                                                isbn=isbn, publication_year=publication_year, stock=stock)
+            updated_book = Book(title, author, publisher, publication_year, isbn, stock)
 
             if validate_book(updated_book):
-                if self.repository.update(book_id, updated_book):
-                    return True
+                return self.repository.update(book_id, updated_book)
             else:
                 raise BookFormatInvalid(book_id)
 
