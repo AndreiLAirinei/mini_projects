@@ -22,6 +22,6 @@ class Book:
         return ['title', 'author', 'publisher', 'isbn']
 
     @classmethod
-    def create_instance(cls, title, author, publisher,  publication_year, isbn, stock):
-        instance = cls(title=title, author=author, publisher=publisher, publication_year=publication_year, isbn=isbn, stock=stock)
+    def create_instance(cls, *args):
+        instance = cls(*args)
         return instance

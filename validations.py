@@ -60,7 +60,7 @@ def validate_book(book_instance):
         if not validate_isbn(book_instance.isbn):
             raise ISBNInvalid(book_instance.isbn)
 
-    except (RequiredFieldsNotFound, PublicationYearInvalid, ISBNInvalid, StockInvalid) as error:
+    except (RequiredFieldsNotFound, PublicationYearInvalid, ISBNInvalid, StockInvalid):
         return False
 
     return True
