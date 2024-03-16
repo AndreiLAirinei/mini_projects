@@ -6,7 +6,7 @@ class Book:
                  title: str,
                  author: str,
                  publisher: str,
-                 publication_year: Optional[int],
+                 publication_year: int,
                  isbn: str,
                  stock: Optional[int] = 0
                  ):
@@ -19,7 +19,7 @@ class Book:
 
     @staticmethod
     def required_fields():
-        return ['title', 'author', 'publisher', 'isbn']
+        return ['title', 'author', 'publisher', 'publication_year','isbn']
 
     @classmethod
     def create_instance(cls, *args):

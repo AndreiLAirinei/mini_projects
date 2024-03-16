@@ -20,7 +20,6 @@ class TestValidatePublicationYear(unittest.TestCase):
 
 
 class TestValidateISBN(unittest.TestCase):
-
     def test_valid_isbn(self):
         valid_isbn = ["978-606-8126-35-7", "0-06-112008-1"]
         for isbn in valid_isbn:
@@ -28,7 +27,7 @@ class TestValidateISBN(unittest.TestCase):
                             f"ISBN {isbn} should be valid")
 
     def test_invalid_isbn(self):
-        invalid_isbn = [978-606-8126-35-7, None, 978-233-8126-35-7, 232-8126-35-7]
+        invalid_isbn = ["978-606-8156-35-7", None, "978-233-8126-35-7", 232-8126-35-7]
         for isbn in invalid_isbn:
             self.assertFalse(validate_isbn(isbn),
                              f"ISBN {isbn} should not be valid")
@@ -50,7 +49,7 @@ class TestValidateBook(unittest.TestCase):
     def test_invalid_instances(self):
         invalid_instances = [
             Book("Random Title", "Random author", "Random publisher",
-                 2053, "05-4543-5435")
+                2032, "05-4543-5435")
         ]
 
         for instance in invalid_instances:

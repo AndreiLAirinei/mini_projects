@@ -1,12 +1,12 @@
 
-class ISBNNotFound(Exception):
-    def __init__(self, isbn, message="ISBN not found"):
+class IDNotFound(Exception):
+    def __init__(self, book_id, message="ID not found"):
         super().__init__(message)
         self.message = message
-        self.isbn = isbn
+        self.id = book_id
 
     def __str__(self):
-        return f"{self.message}: (Book ISBN : {self.isbn})"
+        return f"{self.message}: (Book ID : {self.id})"
 
 
 class RequiredFieldsNotFound(Exception):
