@@ -1,16 +1,21 @@
 from exceptions import ISBNInvalid, RequiredFieldsNotFound, PublicationYearInvalid, StockInvalid
 
 
-def validate_publication_year(year):
-    current_year = 2024
-    return 1500 <= year <= current_year
+def validate_publication_year(year, current_year):
+    if year is None or isinstance(year, str):
+        return False
+    else:
+        return 1499 < year < current_year + 1
 
 
 def validate_isbn(isbn):
-    isbn = isbn.replace("-", "")
 
-    if len(isbn) not in (10, 13):
+    if isinstance(isbn, int) or isbn is None:
         return False
+    else:
+        isbn = isbn.replace("-", "")
+        if len(isbn) not in (10, 13):
+            return False
 
     total_sum = 0
     if len(isbn) == 10:
@@ -18,16 +23,22 @@ def validate_isbn(isbn):
         for i, char in enumerate(isbn):
             if char.isdigit():
                 total_sum += int(char) * (10 - i)
-        return total_sum % 10 == 0
+        if total_sum % 11 == 0:
+            return True
+        else:
+            return False
 
     elif len(isbn) == 13:
         # ISBN-13 algorithm
         for i, char in enumerate(isbn):
-            if char.isdigit() and i % 2 != 0:
+            if char.isdigit() and i % 2 == 0:
                 total_sum += int(char)
             else:
                 total_sum += int(char) * 3
-        return total_sum % 11 == 0
+        if total_sum % 10 == 0:
+            return True
+        else:
+            return False
 
 
 def validate_book(book_instance):
@@ -64,19 +75,22 @@ def validate_not_none(book_instance):
     return True
 
 
-def validate_instance_str(book_instance):
-    fields_str = ['title', 'author', 'publisher']
-    for field in fields_str:
-        attribute_value = getattr(book_instance, field)
-        if not isinstance(attribute_value, str):
-            raise RequiredFieldsNotFound(attribute_value)
+def validate_instance_str(book_attribute):
+    if not isinstance(book_attribute, str):
+        raise RequiredFieldsNotFound(book_attribute)
     return True
 
 
-def validate_instance_int(book_instance):
-    fields_int = ['publication_year', 'stock']
-    for field in fields_int:
-        attribute_value = getattr(book_instance, field)
-        if not isinstance(attribute_value, int) and attribute_value < 0:
-            raise RequiredFieldsNotFound(attribute_value)
+def validate_instance_int(book_attribute):
+    if not isinstance(book_attribute, int) and book_attribute < 0:
+        raise RequiredFieldsNotFound(book_attribute)
     return True
+
+
+# def validate_instance_int(book_attribute):
+#     fields_int = ['publication_year', 'stock']
+#     for field in fields_int:
+#         attribute_value = getattr(book_instance, field)
+#         if not isinstance(attribute_value, int) and attribute_value < 0:
+#             raise RequiredFieldsNotFound(attribute_value)
+#     return True
