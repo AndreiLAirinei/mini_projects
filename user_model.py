@@ -14,6 +14,6 @@ class User:
         self.last_name = last_name
         self.address = address
 
-    @property
-    def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+    # @property
+    # def full_name(self):
+    #     return f"{self.first_name} {self.last_name}"

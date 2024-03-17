@@ -1,12 +1,13 @@
 from user_model import User
 from exceptions import IDNotFound
 
+
 class UserController:
 
     def __init__(self, repository):
         self.repository = repository
 
-    def create(self, first_name, last_name, address):
+    def create_user(self, first_name, last_name, address):
         instance = User(first_name, last_name, address)
         self.repository.user_create(instance)
 
