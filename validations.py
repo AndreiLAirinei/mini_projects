@@ -43,25 +43,25 @@ def validate_isbn(isbn):
             return False
 
 
-def validate_book(book_instance):
+def validate_book(title, author, publisher, publication_year, isbn, stock):
     try:
-        validate_not_none(book_instance)
-        validate_instance_str(book_instance.title)
-        validate_instance_str(book_instance.author)
-        validate_instance_str(book_instance.publisher)
+        validate_not_none(title, author, publisher, publication_year, isbn)
+        validate_instance_str(title)
+        validate_instance_str(author)
+        validate_instance_str(publisher)
 
         current_year = datetime.now().year
-        if book_instance.publication_year is not None:
-            if not validate_instance_int(book_instance.publication_year) or \
-                    not validate_publication_year(book_instance.publication_year, current_year):
-                raise PublicationYearInvalid(book_instance.publication_year)
+        if publication_year is not None:
+            if not validate_instance_int(publication_year) or \
+                    not validate_publication_year(publication_year, current_year):
+                raise PublicationYearInvalid(publication_year)
 
-        if book_instance.stock is not None:
-            if not validate_instance_int(book_instance.stock):
-                raise StockInvalid(book_instance.stock)
+        if stock is not None:
+            if not validate_instance_int(stock):
+                raise StockInvalid(stock)
 
-        if not validate_isbn(book_instance.isbn):
-            raise ISBNInvalid(book_instance.isbn)
+        if not validate_isbn(isbn):
+            raise ISBNInvalid(isbn)
 
     except (RequiredFieldsNotFound, PublicationYearInvalid, ISBNInvalid, StockInvalid):
         return False
@@ -69,10 +69,10 @@ def validate_book(book_instance):
     return True
 
 
-def validate_not_none(book_instance):
+def validate_not_none(title, author, publisher, publication_year, isbn):
     fields = ['title', 'author', 'publisher', 'publication_year', 'isbn']
     for field in fields:
-        attribute_value = getattr(book_instance, field)
+        attribute_value = locals()[field]
         if attribute_value is None:
             raise RequiredFieldsNotFound(attribute_value)
     return True

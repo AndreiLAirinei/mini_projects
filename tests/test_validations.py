@@ -36,24 +36,30 @@ class TestValidateISBN(unittest.TestCase):
 class TestValidateBook(unittest.TestCase):
 
     def test_valid_instance(self):
+        # to send each field instead of instance/ send a list
         valid_instances = [
-            Book("The Great Gatsby", "Scribner", "F. Scott Fitzgerald",
-                1925, "978-0743273565", 10),
-            Book("To Kill a Mockingbird", "Harper Lee", "J.B. Lippincott & Co.",
-                1960, "0-06-112008-1", 8)
+            ("The Great Gatsby", "Scribner", "F. Scott Fitzgerald", 1925, "978-0743273565", 10),
+            ("To Kill a Mockingbird", "Harper Lee", "J.B. Lippincott & Co.", 1960, "0-06-112008-1", 8)
         ]
 
         for instance in valid_instances:
-            self.assertTrue(validate_book(instance), f"Instance {instance.title} should be valid.")
+            title, author, publisher, publication_year, isbn, stock = instance
+            self.assertTrue(
+                validate_book(title, author, publisher, publication_year, isbn, stock),
+                f"Instance {instance[0]} should be valid."
+            )
 
     def test_invalid_instances(self):
         invalid_instances = [
-            Book("Random Title", "Random author", "Random publisher",
-                2032, "05-4543-5435")
+            ("Random Title", "Random author", "Random publisher", 2032, "05-4543-5435", 0)
         ]
 
         for instance in invalid_instances:
-            self.assertFalse(validate_book(instance), f"Instance {instance.title} should not be valid.")
+            title, publisher, author, publication_year, isbn, stock = instance
+            self.assertFalse(
+                validate_book(title, publisher, author, publication_year, isbn, stock),
+                f"Instance {instance[0]} should be invalid."
+            )
 
 
 if __name__ == '__main__':

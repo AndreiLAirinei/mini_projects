@@ -32,6 +32,7 @@ class UI:
 
     @staticmethod
     def print_menu():
+
         print("\n")
         print("1. Create entry")
         print("2. Read all entries")
@@ -45,7 +46,7 @@ class UI:
         author = input("Enter the author: ")
         publisher = input("Enter the publisher: ")
         isbn = input("Enter the ISBN: ")
-        publication_year = int(input("Enter the publication year: "))
+        publication_year = input("Enter the publication year: ")
         stock = int(input("Enter the stock: "))
 
         if self.controller.create(title, author, publisher, publication_year, isbn, stock):

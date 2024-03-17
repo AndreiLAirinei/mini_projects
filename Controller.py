@@ -10,7 +10,8 @@ class Controller:
     def create(self, title, author, publisher, publication_year, isbn, stock=0):
         try:
             book_instance = Book(title, author, publisher, publication_year, isbn, stock)
-            if validate_book(book_instance):
+
+            if validate_book(title, author, publisher, publication_year, isbn, stock):
                 self.repository.create(book_instance)
             else:
                 raise BookFormatInvalid(isbn)
