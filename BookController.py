@@ -3,7 +3,7 @@ from validations import validate_book
 from exceptions import IDNotFound, BookFormatInvalid
 
 
-class Controller:
+class BookController:
     def __init__(self, repository):
         self.repository = repository
 
@@ -12,7 +12,7 @@ class Controller:
             book_instance = Book(title, author, publisher, publication_year, isbn, stock)
 
             if validate_book(title, author, publisher, publication_year, isbn, stock):
-                self.repository.create(book_instance)
+                self.repository.book_create(book_instance)
             else:
                 raise BookFormatInvalid(isbn)
             return True
@@ -21,14 +21,14 @@ class Controller:
             print(str(error))
 
     def read_all(self):
-        return self.repository.read_all()
+        return self.repository.book_read_all()
 
     def read_by_id(self, book_id):
         try:
             if not self.repository.id_exists(book_id):
                 raise IDNotFound(book_id)
             else:
-                return self.repository.read_by_id(book_id)
+                return self.repository.book_read_by_id(book_id)
         except IDNotFound as error:
             print(str(error))
 
@@ -40,7 +40,7 @@ class Controller:
             updated_book = Book(title, author, publisher, publication_year, isbn, stock)
 
             if validate_book(updated_book):
-                return self.repository.update(book_id, updated_book)
+                return self.repository.book_update(book_id, updated_book)
             else:
                 raise BookFormatInvalid(book_id)
 
@@ -52,7 +52,7 @@ class Controller:
             if not self.repository.id_exists(book_id):
                 raise IDNotFound(book_id)
             else:
-                return self.repository.delete(book_id)
+                return self.repository.book_delete(book_id)
 
         except IDNotFound as error:
             print(str(error))

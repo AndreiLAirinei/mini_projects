@@ -49,13 +49,13 @@ class UI:
         publication_year = input("Enter the publication year: ")
         stock = int(input("Enter the stock: "))
 
-        if self.controller.create(title, author, publisher, publication_year, isbn, stock):
+        if self.controller.book_create(title, author, publisher, publication_year, isbn, stock):
             print("Book created successfully.")
         else:
             print("Error creating the book. Please try again.")
 
     def read_all_entries(self):
-        entries = self.controller.read_all()
+        entries = self.controller.book_read_all()
         if entries:
             print("All book entries:\n")
             for entry in entries:
@@ -65,7 +65,7 @@ class UI:
 
     def read_entry_by_id(self):
         book_id = int(input("Enter the ID: "))
-        book = self.controller.read_by_id(book_id)
+        book = self.controller.book_read_by_id(book_id)
         if book:
             print(book)
         else:
@@ -80,7 +80,7 @@ class UI:
         publication_year = int(input("Enter the updated publication year: "))
         stock = int(input("Enter the updated stock: "))
 
-        if self.controller.update(book_id, title, author, publisher, publication_year, isbn, stock):
+        if self.controller.book_update(book_id, title, author, publisher, publication_year, isbn, stock):
             print("Book updated successfully.")
             return True
         else:
@@ -89,7 +89,7 @@ class UI:
 
     def delete_entry_by_id(self):
         book_id = int(input("Enter the ID of the book to delete: "))
-        deleted = self.controller.delete(book_id)
+        deleted = self.controller.book_delete(book_id)
         if deleted:
             print(f"Book with ID {book_id} deleted successfully.")
         else:
