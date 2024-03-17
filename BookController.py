@@ -7,7 +7,7 @@ class BookController:
     def __init__(self, repository):
         self.repository = repository
 
-    def create(self, title, author, publisher, publication_year, isbn, stock=0):
+    def create_book(self, title, author, publisher, publication_year, isbn, stock=0):
         try:
             book_instance = Book(title, author, publisher, publication_year, isbn, stock)
 
@@ -20,10 +20,10 @@ class BookController:
         except BookFormatInvalid as error:
             print(str(error))
 
-    def read_all(self):
+    def read_all_books(self):
         return self.repository.book_read_all()
 
-    def read_by_id(self, book_id):
+    def read_book_by_id(self, book_id):
         try:
             if not self.repository.id_exists(book_id):
                 raise IDNotFound(book_id)
@@ -32,7 +32,7 @@ class BookController:
         except IDNotFound as error:
             print(str(error))
 
-    def update(self, book_id, title, author, publisher, publication_year, isbn, stock=0):
+    def update_book(self, book_id, title, author, publisher, publication_year, isbn, stock=0):
         try:
             if not self.repository.id_exists(book_id):
                 raise IDNotFound(book_id)
@@ -47,7 +47,7 @@ class BookController:
         except (IDNotFound, BookFormatInvalid) as error:
             print(str(error))
 
-    def delete(self, book_id):
+    def delete_book(self, book_id):
         try:
             if not self.repository.id_exists(book_id):
                 raise IDNotFound(book_id)

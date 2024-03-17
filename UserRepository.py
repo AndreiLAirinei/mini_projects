@@ -19,7 +19,7 @@ class UserRepository:
                 return user
         return None
 
-    def update(self, user_id, user):
+    def user_update(self, user_id, user):
         if not self.data:
             return False
 
@@ -29,7 +29,7 @@ class UserRepository:
                 return True
         return False
 
-    def delete(self, user_id):
+    def user_delete(self, user_id):
         if not self.data:
             return False
 
@@ -39,7 +39,7 @@ class UserRepository:
                 return True
         return False
 
-    def id_exists(self, user_id):
+    def user_id_exists(self, user_id):
         for user in self.data:
             if user.user_id == user_id:
                 return True

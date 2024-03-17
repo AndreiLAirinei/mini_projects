@@ -1,12 +1,12 @@
 
 class IDNotFound(Exception):
-    def __init__(self, book_id, message="ID not found"):
+    def __init__(self, id_instance, message="ID not found"):
         super().__init__(message)
         self.message = message
-        self.id = book_id
+        self.id = id_instance
 
     def __str__(self):
-        return f"{self.message}: (Book ID : {self.id})"
+        return f"{self.message}: ( ID : {self.id})"
 
 
 class RequiredFieldsNotFound(Exception):

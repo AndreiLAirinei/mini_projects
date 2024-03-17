@@ -43,4 +43,3 @@ class BookRepository:
             if book.book_id == book_id:
                 return True
         return False
-
