@@ -20,7 +20,7 @@ class Book:
         self.publisher = publisher
         self.publication_year = publication_year
         self.isbn = isbn
-        self.stock = stock
+        self.stock = stock if stock is not None else 0
 
     @staticmethod
     def required_fields():

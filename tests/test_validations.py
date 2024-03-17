@@ -1,5 +1,4 @@
 import unittest
-from book_model import Book
 from validations import validate_publication_year, validate_isbn, validate_book
 
 
