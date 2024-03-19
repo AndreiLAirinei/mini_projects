@@ -39,7 +39,7 @@ class BookController:
 
             updated_book = Book(title, author, publisher, publication_year, isbn, stock)
 
-            if validate_book(updated_book):
+            if validate_book(title, author, publisher, publication_year, isbn, stock):
                 return self.repository.book_update(book_id, updated_book)
             else:
                 raise BookFormatInvalid(book_id)

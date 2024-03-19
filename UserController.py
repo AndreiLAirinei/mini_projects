@@ -1,5 +1,6 @@
 from user_model import User
-from exceptions import IDNotFound
+from validations import validate_user
+from exceptions import IDNotFound, UserFormatInvalid
 
 
 class UserController:
@@ -8,11 +9,16 @@ class UserController:
         self.repository = repository
 
     def create_user(self, first_name, last_name, address):
-        instance = User(first_name, last_name, address)
-        if self.repository.user_create(instance):
-            return True
-        else:
+        try:
+            instance = User(first_name, last_name, address)
+
+            if validate_user(first_name, last_name, address):
+                self.repository.user_create(instance)
+            else:
+                raise UserFormatInvalid(instance.user_id)
             return False
+        except UserFormatInvalid as error:
+            print(str(error))
 
     def read_all_users(self):
         return self.repository.user_read_all()
@@ -33,13 +39,12 @@ class UserController:
 
             updated_user = User(first_name, last_name, address)
 
-            # Validation
-            if updated_user:
+            if validate_user(first_name, last_name, address):
                 return self.repository.user_update(user_id, updated_user)
             else:
-                raise Exception
+                raise UserFormatInvalid(user_id)
 
-        except (IDNotFound, Exception) as error:
+        except (IDNotFound, UserFormatInvalid) as error:
             print(str(error))
 
     def delete_user(self, user_id):

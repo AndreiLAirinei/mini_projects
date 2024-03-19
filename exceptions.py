@@ -36,6 +36,15 @@ class BookFormatInvalid(Exception):
         return f"{self.message}: (Book ISBN : {self.isbn})"
 
 
+class UserFormatInvalid(Exception):
+    def __init__(self, user_id, message="User invalid"):
+        self.message = message
+        self.user_id = user_id
+
+    def __str__(self):
+        return f"{self.message}: (User ID : {self.user_id})"
+
+
 class PublicationYearInvalid(Exception):
     def __init__(self, message="Publication year is invalid: ", *args):
         self.message = message

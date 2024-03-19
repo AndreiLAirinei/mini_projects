@@ -148,5 +148,3 @@ def validate_instance_int(attribute):
     if not isinstance(attribute, int) and attribute < 0:
         raise RequiredFieldsNotFound(attribute)
     return True
-
-
