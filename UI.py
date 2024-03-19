@@ -1,8 +1,9 @@
 
 
 class UI:
-    def __init__(self, controller):
-        self.controller = controller
+    def __init__(self, book_controller, user_controller):
+        self.book_controller = book_controller
+        self.user_controller = user_controller
 
     def run(self):
         while True:
@@ -10,53 +11,11 @@ class UI:
             user_input = int(input("Please input the option: "))
 
             if user_input == 1:
-                while True:
-                    self.print_book_menu()
-
-                    if user_input == 1:
-                        self.create_book_entry()
-
-                    elif user_input == 2:
-                        self.read_all_book_entries()
-
-                    elif user_input == 3:
-                        self.read_book_entry_by_id()
-
-                    elif user_input == 4:
-                        self.update_book_entry_by_id()
-
-                    elif user_input == 5:
-                        self.delete_book_entry_by_id()
-
-                    elif user_input == 6:
-                        break
-                    else:
-                        print("Invalid choice. Please try again.")
-
+                self.handle_book_menu()
             elif user_input == 2:
-                while True:
-                    self.print_user_menu()
-
-                    if user_input == 1:
-                        self.create_user_entry()
-
-                    elif user_input == 2:
-                        self.read_all_user_entries()
-
-                    elif user_input == 3:
-                        self.read_user_entry_by_id()
-
-                    elif user_input == 4:
-                        self.update_user_entry_by_id()
-
-                    elif user_input == 5:
-                        self.delete_user_entry_by_id()
-
-                    elif user_input == 6:
-                        break
-                    else:
-                        print("Invalid choice. Please try again.")
-
+                self.handle_user_menu()
+            elif user_input == 3:
+                break
             else:
                 print("Invalid choice. Please try again.")
 
@@ -65,44 +24,85 @@ class UI:
         print("\n")
         print("1. Enter book menu")
         print("2. Enter user menu")
+        print("3. Exit the application")
+
+    def handle_book_menu(self):
+        while True:
+            self.print_book_menu()
+            user_input = int(input("Please input the option: "))
+
+            if user_input == 1:
+                self.create_book_entry()
+            elif user_input == 2:
+                self.read_all_book_entries()
+            elif user_input == 3:
+                self.read_book_entry_by_id()
+            elif user_input == 4:
+                self.update_book_entry_by_id()
+            elif user_input == 5:
+                self.delete_book_entry_by_id()
+            elif user_input == 6:
+                break
+            else:
+                print("Invalid choice. Please try again.")
+
+    def handle_user_menu(self):
+        while True:
+            self.print_user_menu()
+            user_input = int(input("Please input the option: "))
+
+            if user_input == 1:
+                self.create_user_entry()
+            elif user_input == 2:
+                self.read_all_user_entries()
+            elif user_input == 3:
+                self.read_user_entry_by_id()
+            elif user_input == 4:
+                self.update_user_entry_by_id()
+            elif user_input == 5:
+                self.delete_user_entry_by_id()
+            elif user_input == 6:
+                break
+            else:
+                print("Invalid choice. Please try again.")
 
     @staticmethod
     def print_book_menu():
-
         print("\n")
-        print("1. Create entry")
-        print("2. Read all entries")
-        print("3. Read entry by ID")
-        print("4. Update entry by ID")
-        print("5. Delete entry by ID")
-        print("6. Exit")
+        print("1. Create book entry")
+        print("2. Read all book entries")
+        print("3. Read book entry by ID")
+        print("4. Update book entry by ID")
+        print("5. Delete book entry by ID")
+        print("6. Exit book menu")
+        print("\n")
 
     @staticmethod
     def print_user_menu():
-
         print("\n")
-        print("1. Create entry")
-        print("2. Read all entries")
-        print("3. Read entry by ID")
-        print("4. Update entry by ID")
-        print("5. Delete entry by ID")
-        print("6. Exit")
+        print("1. Create user entry")
+        print("2. Read all user entries")
+        print("3. Read user entry by ID")
+        print("4. Update user entry by ID")
+        print("5. Delete user entry by ID")
+        print("6. Exit user menu")
+        print("\n")
 
     def create_book_entry(self):
         title = input("Enter the title: ")
         author = input("Enter the author: ")
         publisher = input("Enter the publisher: ")
         isbn = input("Enter the ISBN: ")
-        publication_year = input("Enter the publication year: ")
+        publication_year = int(input("Enter the publication year: "))
         stock = int(input("Enter the stock: "))
 
-        if self.controller.create_book(title, author, publisher, publication_year, isbn, stock):
+        if self.book_controller.create_book(title, author, publisher, publication_year, isbn, stock):
             print("Book created successfully.")
         else:
             print("Error creating the book. Please try again.")
 
     def read_all_book_entries(self):
-        entries = self.controller.read_all_books()
+        entries = self.book_controller.read_all_books()
         if entries:
             print("All book entries:\n")
             for entry in entries:
@@ -112,7 +112,7 @@ class UI:
 
     def read_book_entry_by_id(self):
         book_id = int(input("Enter the ID: "))
-        book = self.controller.read_book_by_id(book_id)
+        book = self.book_controller.read_book_by_id(book_id)
         if book:
             print(book)
         else:
@@ -127,7 +127,7 @@ class UI:
         publication_year = int(input("Enter the updated publication year: "))
         stock = int(input("Enter the updated stock: "))
 
-        if self.controller.update_book(book_id, title, author, publisher, publication_year, isbn, stock):
+        if self.book_controller.update_book(book_id, title, author, publisher, publication_year, isbn, stock):
             print("Book updated successfully.")
             return True
         else:
@@ -136,7 +136,7 @@ class UI:
 
     def delete_book_entry_by_id(self):
         book_id = int(input("Enter the ID of the book to delete: "))
-        deleted = self.controller.delete_book(book_id)
+        deleted = self.book_controller.delete_book(book_id)
         if deleted:
             print(f"Book with ID {book_id} deleted successfully.")
         else:
@@ -147,13 +147,13 @@ class UI:
         last_name = input("Enter the last name: ")
         address = input("Enter the address: ")
 
-        if self.controller.create_user(first_name, last_name, address):
+        if self.user_controller.create_user(first_name, last_name, address):
             print("User created successfully.")
         else:
             print("Error creating the user. Please try again.")
 
     def read_all_user_entries(self):
-        entries = self.controller.read_all_users()
+        entries = self.user_controller.read_all_users()
         if entries:
             print("All user entries:\n")
             for entry in entries:
@@ -163,7 +163,7 @@ class UI:
 
     def read_user_entry_by_id(self):
         user_id = int(input("Enter the user ID: "))
-        user = self.controller.read_user_by_id(user_id)
+        user = self.user_controller.read_user_by_id(user_id)
         if user:
             print(user)
         else:
@@ -175,7 +175,7 @@ class UI:
         last_name = input("Enter the last name: ")
         address = input("Enter the address: ")
 
-        if self.controller.update_user(user_id, first_name, last_name, address):
+        if self.user_controller.update_user(user_id, first_name, last_name, address):
             print("User updated successfully.")
             return True
         else:
@@ -185,7 +185,7 @@ class UI:
     def delete_user_entry_by_id(self):
         user_id = int(input("Enter the user ID: "))
 
-        if self.controller.delete_user(user_id):
+        if self.user_controller.delete_user(user_id):
             print("User deleted successfully.")
         else:
             print("Error deleting the user. Please try again.")

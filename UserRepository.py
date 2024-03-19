@@ -9,6 +9,7 @@ class UserRepository:
         self.last_user_id += 1
         instance.user_id = self.last_user_id
         self.data.append(instance)
+        return True
 
     def user_read_all(self):
         return self.data
@@ -23,9 +24,9 @@ class UserRepository:
         if not self.data:
             return False
 
-        for i, existing_user in enumerate(self.data):
+        for index, existing_user in enumerate(self.data):
             if existing_user.user_id == user_id:
-                self.data[i] = user
+                self.data[index] = user
                 return True
         return False
 
@@ -33,9 +34,9 @@ class UserRepository:
         if not self.data:
             return False
 
-        for i, existing_user in enumerate(self.data):
+        for index, existing_user in enumerate(self.data):
             if existing_user.user_id == user_id:
-                del self.data[i]
+                del self.data[index]
                 return True
         return False
 

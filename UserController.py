@@ -9,7 +9,10 @@ class UserController:
 
     def create_user(self, first_name, last_name, address):
         instance = User(first_name, last_name, address)
-        self.repository.user_create(instance)
+        if self.repository.user_create(instance):
+            return True
+        else:
+            return False
 
     def read_all_users(self):
         return self.repository.user_read_all()
@@ -19,7 +22,7 @@ class UserController:
             if not self.repository.user_id_exists(user_id):
                 raise IDNotFound(user_id)
             else:
-                self.repository.user_read_by_id(user_id)
+                return self.repository.user_read_by_id(user_id)
         except IDNotFound as error:
             print(str(error))
 
@@ -32,7 +35,7 @@ class UserController:
 
             # Validation
             if updated_user:
-                return self.repository.user_update(user_id)
+                return self.repository.user_update(user_id, updated_user)
             else:
                 raise Exception
 
