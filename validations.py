@@ -1,6 +1,7 @@
 from datetime import datetime
-
-from exceptions import ISBNInvalid, RequiredFieldsNotFound, PublicationYearInvalid, StockInvalid
+from exceptions import (ISBNInvalid, RequiredFieldsNotFound, PublicationYearInvalid,
+                        StockInvalid, AddressFormatInvalid, NameFormatInvalid)
+import re
 
 
 def validate_publication_year(year, current_year):
@@ -43,9 +44,40 @@ def validate_isbn(isbn):
             return False
 
 
+def validate_name_format(attribute):
+    if not isinstance(attribute, str) or attribute is None:
+        return False
+
+    if len(attribute) > 15:
+        return False
+
+    # for patterns like McDonald or O'Neil
+    name_pattern = r'^[A-Z][a-z\'\-]*$'
+    if re.match(name_pattern, attribute):
+        return True
+    else:
+        return False
+
+
+def validate_format_address(address):
+    if not isinstance(address, str) or address is None:
+        return False
+
+    abbreviation_pattern = r"\b(?:Str\.|Nr\.|Ave\.|St\.|Blvd\.|Ln\.|Rd\.|Pl\.|Ct\.)\s"
+    abbreviation_regex = re.compile(abbreviation_pattern)
+    matches = abbreviation_regex.findall(address)
+
+    for match in matches:
+        abbreviation_last_index = address.find(match) + len(match)
+        char_after_abbreviation = address[abbreviation_last_index]
+
+        if not (char_after_abbreviation.isupper() or char_after_abbreviation.isdigit()):
+            return False
+
+
 def validate_book(title, author, publisher, publication_year, isbn, stock):
     try:
-        validate_not_none(title, author, publisher, publication_year, isbn)
+        validate_book_not_none(title, author, publisher, publication_year, isbn)
         validate_instance_str(title)
         validate_instance_str(author)
         validate_instance_str(publisher)
@@ -69,7 +101,26 @@ def validate_book(title, author, publisher, publication_year, isbn, stock):
     return True
 
 
-def validate_not_none(title, author, publisher, publication_year, isbn):
+def validate_user(first_name, last_name, address):
+    try:
+        validate_user_not_none(first_name, last_name, address)
+        validate_instance_str(first_name)
+        validate_instance_str(last_name)
+        validate_instance_str(address)
+
+        # To add an address format validations
+
+        if not validate_format_address(address):
+            raise AddressFormatInvalid
+
+        if not validate_name_format(first_name, last_name):
+            raise NameFormatInvalid
+
+    except (AddressFormatInvalid, NameFormatInvalid) as error:
+        print(str(error))
+
+
+def validate_book_not_none(title, author, publisher, publication_year, isbn):
     fields = ['title', 'author', 'publisher', 'publication_year', 'isbn']
     for field in fields:
         attribute_value = locals()[field]
@@ -78,15 +129,24 @@ def validate_not_none(title, author, publisher, publication_year, isbn):
     return True
 
 
-def validate_instance_str(book_attribute):
-    if not isinstance(book_attribute, str):
-        raise RequiredFieldsNotFound(book_attribute)
+def validate_user_not_none(first_name, last_name, address):
+    fields = ['first_name', "last_name", "address"]
+    for field in fields:
+        attribute_value = locals()[field]
+        if attribute_value in None:
+            raise RequiredFieldsNotFound(attribute_value)
     return True
 
 
-def validate_instance_int(book_attribute):
-    if not isinstance(book_attribute, int) and book_attribute < 0:
-        raise RequiredFieldsNotFound(book_attribute)
+def validate_instance_str(attribute):
+    if not isinstance(attribute, str):
+        raise RequiredFieldsNotFound(attribute)
+    return True
+
+
+def validate_instance_int(attribute):
+    if not isinstance(attribute, int) and attribute < 0:
+        raise RequiredFieldsNotFound(attribute)
     return True
 
 

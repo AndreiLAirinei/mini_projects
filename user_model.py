@@ -15,7 +15,7 @@ class User:
         self.address = address
 
     def __str__(self):
-        return f"Name: {self.first_name} {self.last_name}, Address: {self.address}"
+        return f"Full name: {self.first_name} {self.last_name}, Address: {self.address}"
 
     # @property
     # def full_name(self):

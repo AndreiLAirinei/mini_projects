@@ -52,3 +52,21 @@ class StockInvalid(Exception):
 
     def __str__(self):
         return f"{self.message}: (Stock: {self.args})"
+
+
+class NameFormatInvalid(Exception):
+    def __init__(self, message="Name format is invalid: ", *args):
+        self.message = message
+        self.args = args
+
+    def __str__(self):
+        return f"{self.message}: (Name: {self.args})"
+
+
+class AddressFormatInvalid(Exception):
+    def __init__(self, message="Address format is invalid: ", *args):
+        self.message = message
+        self.args = args
+
+    def __str__(self):
+        return f"{self.message}: (Address: {self.args})"
