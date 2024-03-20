@@ -1,31 +1,36 @@
-from dataclasses import dataclass
 from typing import Optional
 
 
-@dataclass
 class Book:
-    name: str
-    author: Optional[str]
-    publisher: Optional[str]
-    publication_year: Optional[int]
-    ISBN: str
-    stock: Optional[int]
+    _id_counter = 0  # Class variable to track the last assigned book_id
 
-    @property
-    def publication_year_valid(self):
-        if self.publication_year:
-            if 1 <= self.publication_year <= 9999:
-                return True
-            else:
-                return False
-        else:
-            return False
+    def __init__(self,
+                 title: str,
+                 author: str,
+                 publisher: str,
+                 publication_year: int,
+                 isbn: str,
+                 stock: Optional[int] = 0
+                 ):
+        self.book_id = Book._id_counter + 1  # Increment the book_id counter
+        Book._id_counter += 1  # Increment the counter for the next book
+        self.book_id = 0
+        self.title = title
+        self.author = author
+        self.publisher = publisher
+        self.publication_year = publication_year
+        self.isbn = isbn
+        self.stock = stock if stock is not None else 0
 
-    # To do
-    @property
-    def check_isbn(self):
-        return True
+    @staticmethod
+    def required_fields():
+        return ['title', 'author', 'publisher', 'publication_year', 'isbn']
 
-    def required_fields(self):
-        field_list = [self.name, self.ISBN]
-        return field_list
+    @classmethod
+    def create_instance(cls, *args):
+        instance = cls(*args)
+        return instance
+
+    def __str__(self):
+        return (f"Book({self.title}, {self.author}, {self.publisher}, {self.publication_year}, "
+                f"{self.isbn}, {self.stock})")
